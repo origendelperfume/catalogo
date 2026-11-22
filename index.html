@@ -5,69 +5,334 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>El Origen del Perfume | Catálogo y Pedidos</title>
 <style>
-  :root { --bg:#0f1117; --card:#181b22; --card-2:#20242e; --gold:#d4af37; --gold-soft:rgba(212,175,55,0.14); --text:#f3f4f6; --muted:#9ca3af; --border:#2b303c; --green:#22c55e; --red:#ef4444; }
-  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); padding-bottom:98px; }
-  header { background:linear-gradient(135deg,#161922 0%,#0d0f14 100%); border-bottom:1px solid var(--border); padding:16px 14px 12px; position:sticky; top:0; z-index:30; }
-  .brand { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .brand h1 { margin:0; font-size:1.18rem; color:var(--gold); }
-  .brand small { display:block; color:var(--muted); font-size:0.76rem; }
-  .badge-zone { background:var(--gold-soft); color:var(--gold); border:1px solid rgba(212,175,55,0.35); padding:4px 9px; border-radius:999px; font-size:0.72rem; font-weight:600; }
-  .search-wrap { margin-top:10px; }
-  .search-wrap input { width:100%; background:var(--card-2); border:1px solid var(--border); color:var(--text); padding:10px 12px; border-radius:10px; font-size:0.95rem; outline:none; }
-  .tabs { display:flex; gap:6px; overflow-x:auto; padding:10px 14px 4px; scrollbar-width:none; }
-  .tabs::-webkit-scrollbar { display:none; }
-  .tab { background:var(--card); border:1px solid var(--border); color:var(--muted); padding:7px 13px; border-radius:999px; font-size:0.82rem; font-weight:600; white-space:nowrap; cursor:pointer; }
-  .tab.active { background:var(--gold); color:#111; border-color:var(--gold); }
-  .price-banner { margin:8px 14px; padding:10px 12px; background:var(--card); border:1px solid var(--border); border-radius:12px; font-size:0.78rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between; }
-  .price-banner strong { color:var(--text); }
-  .sesena-highlight { color:#4ade80 !important; font-weight:700; }
-  .list { padding:6px 14px; display:grid; gap:10px; }
-  .item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px; }
-  .item.soldout { opacity:0.58; }
-  .ref-pill { background:var(--card-2); color:var(--gold); font-weight:700; font-size:0.78rem; padding:3px 8px; border-radius:7px; border:1px solid var(--border); }
-  .item-title { font-weight:700; font-size:0.98rem; margin:2px 0; }
-  .item-sub { font-size:0.78rem; color:var(--muted); }
-  .frag-link { display:inline-flex; align-items:center; gap:4px; margin-top:6px; padding:4px 9px; border-radius:7px; background:rgba(59,130,246,0.14); border:1px solid rgba(59,130,246,0.35); color:#93c5fd; font-size:0.74rem; font-weight:600; text-decoration:none; }
-  .tag-new { background:rgba(34,197,94,0.16); color:#4ade80; border:1px solid rgba(34,197,94,0.35); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:999px; margin-left:6px; }
-  .tag-out { background:rgba(239,68,68,0.16); color:#f87171; border:1px solid rgba(239,68,68,0.35); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:999px; margin-left:6px; }
-  .controls { display:grid; grid-template-columns:1fr 1fr auto; gap:6px; align-items:center; }
-  select, .btn-add { height:38px; border-radius:9px; font-size:0.82rem; font-weight:600; }
-  select { background:var(--card-2); color:var(--text); border:1px solid var(--border); padding:0 8px; outline:none; }
-  .btn-add { background:var(--gold); color:#111; border:none; padding:0 14px; cursor:pointer; font-weight:700; }
-  .btn-add:disabled { background:#374151; color:#9ca3af; cursor:not-allowed; }
-  .cart-bar { position:fixed; bottom:0; left:0; right:0; background:#14171f; border-top:1px solid var(--gold); padding:12px 14px; z-index:40; display:flex; justify-content:space-between; align-items:center; gap:10px; }
-  .cart-bar-info strong { display:block; font-size:1rem; color:var(--gold); }
-  .cart-bar-info span { font-size:0.78rem; color:var(--muted); display:block; }
-  .btn-open-cart { background:var(--green); color:#052e16; border:none; border-radius:11px; padding:11px 16px; font-weight:800; font-size:0.9rem; cursor:pointer; white-space:nowrap; }
-  .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:50; overflow-y:auto; padding:16px; }
-  .modal.open { display:block; }
-  .modal-box { background:var(--card); border:1px solid var(--border); border-radius:16px; max-width:520px; margin:10px auto 40px; padding:16px; }
-  .modal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-  .modal-head h2 { margin:0; font-size:1.1rem; color:var(--gold); }
-  .close-btn { background:none; border:none; color:var(--muted); font-size:1.4rem; cursor:pointer; }
-  .cart-line { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid var(--border); font-size:0.86rem; }
-  .qty-box { display:flex; align-items:center; gap:6px; }
-  .qty-btn { width:26px; height:26px; border-radius:7px; border:1px solid var(--border); background:var(--card-2); color:var(--text); font-weight:700; cursor:pointer; }
-  .field { margin-top:10px; }
-  .field label { display:block; font-size:0.8rem; color:var(--muted); margin-bottom:4px; }
-  .field input, .field select { width:100%; background:var(--card-2); border:1px solid var(--border); color:var(--text); padding:9px 10px; border-radius:9px; font-size:0.9rem; }
-  .alert-box { margin-top:10px; padding:10px; border-radius:10px; font-size:0.82rem; line-height:1.35; }
-  .alert-warn { background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#fcd34d; }
-  .alert-err { background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.4); color:#fca5a5; }
-  .alert-ok { background:rgba(34,197,94,0.14); border:1px solid rgba(34,197,94,0.4); color:#86efac; }
-  .btn-wa { width:100%; margin-top:14px; background:#25D366; color:#052e16; border:none; border-radius:12px; padding:13px; font-size:0.98rem; font-weight:800; cursor:pointer; }
-  .btn-wa:disabled { background:#374151; color:#9ca3af; cursor:not-allowed; }
+  :root {
+    --bg: #0f1117;
+    --card: #181b22;
+    --card-2: #20242e;
+    --gold: #d4af37;
+    --gold-soft: rgba(212, 175, 55, 0.14);
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --border: #2b303c;
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 98px;
+  }
+  header {
+    background: linear-gradient(135deg, #161922 0%, #0d0f14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 14px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .brand h1 { margin: 0; font-size: 1.18rem; color: var(--gold); letter-spacing: 0.4px; }
+  .brand small { display: block; color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
+  .header-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge-zone {
+    background: var(--gold-soft);
+    color: var(--gold);
+    border: 1px solid rgba(212,175,55,0.35);
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(212, 175, 55, 0.18);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .pdf-btn:active { transform: scale(0.97); }
+  .search-wrap { margin-top: 10px; display: flex; gap: 8px; }
+  .search-wrap input {
+    flex: 1;
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--gold); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 10px 14px 4px;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tab.active { background: var(--gold); color: #111; border-color: var(--gold); }
+
+  .price-banner {
+    margin: 8px 14px;
+    padding: 10px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .price-banner strong { color: var(--text); }
+  .sesena-highlight { color: #4ade80 !important; font-weight: 700; }
+
+  .list { padding: 6px 14px; display: grid; gap: 10px; }
+  .item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .item.soldout { opacity: 0.58; }
+  .item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .ref-pill {
+    background: var(--card-2);
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 3px 8px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+  }
+  .item-title { font-weight: 700; font-size: 0.98rem; margin: 2px 0; }
+  .item-sub { font-size: 0.78rem; color: var(--muted); }
+  .frag-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 4px 9px;
+    border-radius: 7px;
+    background: rgba(59, 130, 246, 0.14);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    color: #93c5fd;
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tag-new {
+    background: rgba(34, 197, 94, 0.16);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-left: 6px;
+  }
+  .tag-out {
+    background: rgba(239, 68, 68, 0.16);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-left: 6px;
+  }
+
+  .controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; align-items: center; }
+  select, .btn-add {
+    height: 38px;
+    border-radius: 9px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  select {
+    background: var(--card-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0 8px;
+    outline: none;
+  }
+  .btn-add {
+    background: var(--gold);
+    color: #111;
+    border: none;
+    padding: 0 14px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .btn-add:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
+
+  .cart-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #14171f;
+    border-top: 1px solid var(--gold);
+    padding: 12px 14px;
+    z-index: 40;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .cart-bar-info strong { display: block; font-size: 1rem; color: var(--gold); }
+  .cart-bar-info span { font-size: 0.78rem; color: var(--muted); line-height: 1.25; display: block; }
+  .btn-open-cart {
+    background: var(--green);
+    color: #052e16;
+    border: none;
+    border-radius: 11px;
+    padding: 11px 16px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 50;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .modal.open { display: block; }
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    max-width: 520px;
+    margin: 10px auto 40px;
+    padding: 16px;
+  }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .modal-head h2 { margin: 0; font-size: 1.1rem; color: var(--gold); }
+  .close-btn { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; }
+
+  .cart-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.86rem;
+  }
+  .qty-box { display: flex; align-items: center; gap: 6px; }
+  .qty-btn {
+    width: 26px; height: 26px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--card-2); color: var(--text);
+    font-weight: 700; cursor: pointer;
+  }
+
+  .field { margin-top: 10px; }
+  .field label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+  .field input, .field select {
+    width: 100%;
+    background: var(--card-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 10px;
+    border-radius: 9px;
+    font-size: 0.9rem;
+  }
+
+  .alert-box {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.38;
+  }
+  .alert-warn { background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d; }
+  .alert-err { background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; }
+  .alert-ok { background: rgba(34,197,94,0.14); border: 1px solid rgba(34,197,94,0.4); color: #86efac; }
+
+  .total-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+  .total-subnote {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: #fcd34d;
+    text-align: right;
+  }
+
+  .btn-wa {
+    width: 100%;
+    margin-top: 14px;
+    background: #25D366;
+    color: #052e16;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 0.98rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .btn-wa:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
 </style>
 </head>
 <body>
+
 <header>
   <div class="brand">
-    <div><h1>El Origen del Perfume</h1><small>Equivalencias de alta duración · Seseña y Envíos</small></div>
-    <span class="badge-zone">📍 El Quiñón / Seseña</span>
+    <div>
+      <h1>El Origen del Perfume</h1>
+      <small>Equivalencias de alta duración · Seseña y Envíos</small>
+    </div>
+    <div class="header-badges">
+      <a class="pdf-btn" href="./catalogo.pdf" target="_blank" rel="noopener noreferrer">📄 Catálogo PDF ↗</a>
+      <span class="badge-zone">📍 El Quiñón / Seseña</span>
+    </div>
   </div>
-  <div class="search-wrap"><input type="search" id="searchInput" placeholder="Buscar nº ref, perfume o marca..."></div>
+  <div class="search-wrap">
+    <input type="search" id="searchInput" placeholder="Buscar nº ref, perfume o marca (ej: Sauvage, 40)...">
+  </div>
 </header>
+
 <div class="tabs" id="catTabs">
   <button class="tab active" data-cat="Todos">Todos</button>
   <button class="tab" data-cat="Novedades">✨ Novedades</button>
@@ -75,110 +340,375 @@
   <button class="tab" data-cat="Femenina">Femenina</button>
   <button class="tab" data-cat="Nicho">Nicho / Autor</button>
 </div>
+
 <div class="price-banner" id="priceBanner"></div>
+
 <main class="list" id="productList"></main>
+
 <div class="cart-bar">
-  <div class="cart-bar-info"><strong id="barTotal">0,00 € (0 uds)</strong><span id="barSub">Envío gratis en Seseña desde 25,00 €</span></div>
+  <div class="cart-bar-info">
+    <strong id="barTotal">0,00 € (0 uds)</strong>
+    <span id="barSub">Envío gratis en Seseña desde 25,00 €</span>
+  </div>
   <button class="btn-open-cart" onclick="openCart()">Ver Pedido 🛒</button>
 </div>
+
 <div class="modal" id="cartModal">
   <div class="modal-box">
-    <div class="modal-head"><h2>Tu Pedido</h2><button class="close-btn" onclick="closeCart()">✕</button></div>
+    <div class="modal-head">
+      <h2>Tu Pedido</h2>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
     <div id="cartItems"></div>
-    <div class="field"><label>Modalidad de entrega *</label><select id="deliveryMode" onchange="updateCartUI()"><option value="quinon">📍 Recogida y prueba en El Quiñón (Gratis)</option><option value="sesena">🚗 Reparto a domicilio en Seseña (Gratis ≥ 25€)</option><option value="nacional">📦 Envío Nacional por Correos / Mensajería</option></select></div>
+
+    <div class="field">
+      <label>Modalidad de entrega *</label>
+      <select id="deliveryMode" onchange="updateCartUI()">
+        <option value="quinon">📍 Recogida y prueba en El Quiñón (Gratis)</option>
+        <option value="sesena">🚗 Reparto a domicilio en Seseña (Gratis ≥ 25€)</option>
+        <option value="nacional">📦 Envío Nacional por Correos / Mensajería</option>
+      </select>
+    </div>
+
     <div id="deliveryAlert"></div>
-    <div class="field"><label>Tu Nombre *</label><input type="text" id="custName" placeholder="Ej: Laura García"></div>
-    <div class="field" id="addressWrap" style="display:none;"><label>Dirección / Zona de entrega *</label><input type="text" id="custAddress" placeholder="Calle, portal, piso o localidad"></div>
-    <div class="field"><label>Notas (opcional)</label><input type="text" id="custNotes" placeholder="Ej: Prefiero recoger por la tarde / Bizum"></div>
-    <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:1.05rem;font-weight:800;"><span>Total estimado:</span><span id="modalTotal" style="color:var(--gold);">0,00 €</span></div>
+
+    <div class="field">
+      <label>Tu Nombre *</label>
+      <input type="text" id="custName" placeholder="Ej: Laura García">
+    </div>
+    <div class="field" id="addressWrap" style="display:none;">
+      <label>Dirección / Localidad de entrega *</label>
+      <input type="text" id="custAddress" placeholder="Calle, portal, piso, código postal o localidad">
+    </div>
+    <div class="field">
+      <label>Notas (opcional)</label>
+      <input type="text" id="custNotes" placeholder="Ej: Prefiero recoger por la tarde / Bizum">
+    </div>
+
+    <div class="total-row">
+      <span>Total perfumes:</span>
+      <div>
+        <span id="modalTotal" style="color:var(--gold);">0,00 €</span>
+        <span id="modalShipNote" class="total-subnote"></span>
+      </div>
+    </div>
+
     <button class="btn-wa" id="btnSendWA" onclick="sendWhatsApp()">📲 Enviar Pedido por WhatsApp</button>
   </div>
 </div>
+
 <script>
-const APP_DATA = {"whatsapp":"34682017002","envioGratisSesena":25,"costeEnvioSesena":6,"costeEnvioNacional":8,"precios":{"Comercial":{"bote_nuevo":{"30":8,"50":10,"100":14},"relleno":{"30":6,"50":8,"100":12}},"Nicho":{"bote_nuevo":{"30":10,"50":12,"100":16},"relleno":{"30":8,"50":10,"100":14}}},"perfumes":[{"num":"1","nombre":"AIRE DE LOEWE","marca":"LOEWE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"https://www.fragrantica.es/perfume/Loewe/Aire-Loewe-6293.html","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"4","nombre":"CHANEL Nº5","marca":"CHANEL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"https://www.fragrantica.es/perfume/Chanel/Chanel-No-5-Eau-de-Parfum-40069.html","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"5","nombre":"ESENCIA DE LOEWE","marca":"LOEWE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"8","nombre":"TRESOR","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"https://www.fragrantica.es/perfume/Lancome/Tresor-172.html","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"13","nombre":"OPIUM","marca":"Y.S.L","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"19","nombre":"HUGO BOSS","marca":"HUGO BOSS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"20","nombre":"ALLURE","marca":"CHANEL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"23","nombre":"AQUA DI GIO","marca":"G.ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"24","nombre":"LIGHT BLUE","marca":"D&G","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"25","nombre":"JADORE","marca":"DIOR","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"28","nombre":"JPG CLASICA","marca":"JPG","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"29","nombre":"LE MALE","marca":"JEAN PAUL GAULTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"30","nombre":"ANGEL","marca":"T.MUGLER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"32","nombre":"OMNIA CORAL","marca":"BULGARI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"34","nombre":"LEAU DISSEY","marca":"MIYAKE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"35","nombre":"ANGEL","marca":"T.MUGLER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"37","nombre":"CHLOE","marca":"CHLOE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"38","nombre":"BONBON","marca":"VICTOR ROLF","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"39","nombre":"LINTERDIT","marca":"GIVENCHY","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"42","nombre":"DKNY","marca":"DONNA KARAN","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"44","nombre":"BORN IN ROMA PURPLE","marca":"VALENTINO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"45","nombre":"212 VIP ROSE","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"47","nombre":"CANDY","marca":"PRADA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"51","nombre":"CITRON SOLEIL","marca":"EAU ROCHAS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"54","nombre":"PAULA IBIZA","marca":"LOEWE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"55","nombre":"FOREVER WANTED ELEXIR","marca":"AZZARO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"56","nombre":"L´HOMME","marca":"Y.S.L","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"57","nombre":"G&G MEN","marca":"D&G","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"58","nombre":"ALLURE SPORT","marca":"CHANEL","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"61","nombre":"CH MEN","marca":"CH","cat":"Masculina","novedad":false,"agotado":true,"oculto":false,"fragrantica":"","precios":null},{"num":"62","nombre":"OUD WOOD","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"63","nombre":"SCANDAL","marca":"JEAN PAUL GAULTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"64","nombre":"BIANCO LATTE","marca":"GIARDINI DI TOSCANA","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"65","nombre":"POLO BLUE","marca":"RALH LAURENT","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"66","nombre":"BAMBU","marca":"A.DOMINGUEZ","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"67","nombre":"UOMO ROBERTO CAVALLI","marca":"ROBERTO CAVALLI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"69","nombre":"DIOR HOMME","marca":"DIOR","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"70","nombre":"BLEU CHANEL","marca":"CHANEL","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"72","nombre":"AQUA DI GIO PROFUMO","marca":"G.ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"73","nombre":"Nº 7","marca":"LOEWE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"75","nombre":"AVENTUS CREED","marca":"CREED","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"76","nombre":"ARMANI","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"77","nombre":"BAD BOY","marca":"CAROLINA HERRERA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"78","nombre":"LONDON FOR MEN","marca":"BURBERRY","cat":"Masculina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"80","nombre":"FLOWER","marca":"KENZO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"81","nombre":"BLACK XS","marca":"PACO RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"82","nombre":"ALIEN","marca":"T MUGLER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"86","nombre":"IMAGINATIUN","marca":"LOUIS VUITTON","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"87","nombre":"GUCCI RUSH","marca":"GUCCI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"88","nombre":"ALIEN HYPERSENSE","marca":"T MUGLER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"90","nombre":"OPIUM","marca":"Y.S.L","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"91","nombre":"ONE","marca":"D&G","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"94","nombre":"FAHRENHEIT","marca":"DIOR","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"96","nombre":"KENZO POUR HOMME","marca":"KENZO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"97","nombre":"ONLY THE BRAVE","marca":"DIESEL","cat":"Masculina","novedad":false,"agotado":true,"oculto":false,"fragrantica":"","precios":null},{"num":"99","nombre":"SPICE BOMB EXTREME","marca":"VICTOR ROLF","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"101","nombre":"AMOR AMOR","marca":"CACHAREL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"102","nombre":"POEME","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"104","nombre":"OMNIA CRYSTALLINE","marca":"BULGARI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"105","nombre":"COCO MADEMOISELLE","marca":"CHANEL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"106","nombre":"RALPH LAURENT","marca":"RALPH LAURENT","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"107","nombre":"TOBACCO VAINILLE","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"109","nombre":"LA BELLE PARADISE GARDEN","marca":"JEAN PAUL GAULTIER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"111","nombre":"DIOR ADDICT","marca":"DIOR","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"112","nombre":"ALIEN GGODDESS","marca":"T MUGLER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"115","nombre":"ANGEL NOVA","marca":"ANGEL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"116","nombre":"EDEN","marca":"CACHAREL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"120","nombre":"THIS IS HER","marca":"ZADIG & VOLTAIRE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"121","nombre":"212 VIP","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"122","nombre":"OLIMPEA","marca":"PACO RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"123","nombre":"NARCISO RODRIGUEZ","marca":"NARCISO RODRIGUEZ","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"125","nombre":"BECAUSE IT´S YOU","marca":"ARMANI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"127","nombre":"FANTASY","marca":"BRITNEY SPEAR","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"130","nombre":"HYPNOSE","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"131","nombre":"PLATINUM EGOISTE","marca":"CHANEL","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"135","nombre":"CRYSTAL NOIR","marca":"VERSACE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"136","nombre":"BLACK CODE","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"137","nombre":"AGUA FRESCA DE ROSAS","marca":"A.DOMINGUEZ","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"140","nombre":"SOLO LOEWE","marca":"LOEWE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"141","nombre":"L'EAU D'ISSEY","marca":"MIYAKE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"142","nombre":"CODE","marca":"ARMANI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"143","nombre":"MY WAY","marca":"ARMANI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"145","nombre":"DIESEL FUEL FOR LIFE","marca":"DIESEL","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"146","nombre":"LIBRE","marca":"Y.S.L","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"147","nombre":"THE COVETED DUCHESS ROSE","marca":"PENHALIGON'S","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"148","nombre":"ONE MILLION","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"149","nombre":"LADY MILLION","marca":"P.RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"151","nombre":"LA NIUT TRESOR","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"152","nombre":"BLACK OPIUM","marca":"Y.S.L","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"155","nombre":"INFUSION DIRIS","marca":"PRADA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"159","nombre":"DOLCE BLUE JASMINE","marca":"D&G","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"162","nombre":"AIRE SUTILEZA","marca":"LOEWE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"163","nombre":"LA BOMBA","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"164","nombre":"MIS DIOR","marca":"DIOR","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"165","nombre":"LA VIE EST BELLE","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"167","nombre":"UN JARDIN DEL SUR","marca":"HERMES","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"170","nombre":"HYPNOTIC POSION","marca":"DIOR","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"173","nombre":"GUCCI F.G. ORCHID","marca":"GUCCI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"177","nombre":"SI","marca":"ARMANI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"178","nombre":"LA PANTHERE","marca":"CARTIER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"180","nombre":"DAISY","marca":"MARC JACOBS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"185","nombre":"GOOD GIRL","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"186","nombre":"THE SCENT","marca":"HUGO BOSS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"188","nombre":"MON PARIS","marca":"Y.S.L","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"189","nombre":"VERY GOOD GIRL","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"0192","nombre":"EROS POUR FEMME","marca":"VERSACE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"192","nombre":"LA VIE EST BELLE VAINILLA NUDE","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"194","nombre":"SCANDAL","marca":"JEAN PAUL GAULTIER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"195","nombre":"GRABIELLE","marca":"CHANEL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"198","nombre":"SORBETO ROSSO","marca":"ESCADA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"199","nombre":"YES I AM","marca":"CACHAREL","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"200","nombre":"DEVOTION","marca":"D&G","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"201","nombre":"MILLION GOLD","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"202","nombre":"BOSS BOTELED","marca":"HUGO BOSS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"203","nombre":"PARADIGME","marca":"PRADA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"204","nombre":"GUCCI GULTY","marca":"GUCCI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"205","nombre":"CH","marca":"CAROLINA HERRERA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"206","nombre":"PHANTOM","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"208","nombre":"INVICTUS VICTORY","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"210","nombre":"TERRE HERMES","marca":"HERMES","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"213","nombre":"LUNA ROSSA","marca":"PRADA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"214","nombre":"ARMANI CODE","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"215","nombre":"INVICTUS","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"217","nombre":"STRONGER YOU INTENSILY","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"219","nombre":"THE SCENT","marca":"HUDO BOSS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"220","nombre":"ULTRA LEMALE","marca":"JEAN PAUL GAULTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"221","nombre":"EAU SAUVAGE","marca":"DIOR","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"222","nombre":"SAUVAGE","marca":"DIOR","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"225","nombre":"EROS","marca":"VERSACE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"226","nombre":"PURE XS","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"228","nombre":"WANTED","marca":"AZZARO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"229","nombre":"STRONGE WITH YOU","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"230","nombre":"ONE MILLION LUCKY","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"232","nombre":"EXPLORE","marca":"MONT BLANC","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"233","nombre":"K","marca":"D&G","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"234","nombre":"LE BEAU","marca":"JEAN PAUL GAULTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"236","nombre":"NOIR ESTREME","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"237","nombre":"OMBRE LEATHER","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"239","nombre":"INVICTUS VICTORY ELEXIR","marca":"P.RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"240","nombre":"TOY BOY","marca":"MOSCHINO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"241","nombre":"V POUR HOMME","marca":"VALENTINO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"242","nombre":"ARABIANS TONKA","marca":"MONTALE","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"243","nombre":"SOLO ATLAS","marca":"LOEWE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"245","nombre":"ATTITUDE","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"246","nombre":"EROS ENERGY","marca":"EROS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"248","nombre":"ACQUA POUR HOMME","marca":"BULGARI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"249","nombre":"BOSS BOTTELED NIGHT","marca":"HUGO BOSS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"250","nombre":"LA NUIT DE L'HOMME","marca":"Y.S.L","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"251","nombre":"DECLARACION","marca":"CARTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"253","nombre":"STRONGER WITH YOU ABSOLUTELY","marca":"ARMANI","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"254","nombre":"A MEN PURA HAVANA","marca":"T.MUGLER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"256","nombre":"ESENCIA ELEXIR","marca":"LOEWE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"257","nombre":"OUD FOR GREATNESS","marca":"INTIO","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"258","nombre":"MY SELF","marca":"Y.S.L","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"259","nombre":"BOSS BOTTELED ELEXIR","marca":"HUGO BOSS","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"260","nombre":"BORN IN ROMA EXTRAVAGANZA","marca":"VALENTINO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"261","nombre":"BORN IN ROMA","marca":"VALENTINO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"262","nombre":"ONE MILLION ELEXIR","marca":"PACO RABANNE","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"263","nombre":"LE MALE ELEXIR","marca":"JEAN PAUL GAULTIER","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"264","nombre":"SAUVAGE ELEXIR","marca":"DIOR","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"265","nombre":"BORN IN ROMA PURPLE","marca":"VALENTINO","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"266","nombre":"1 MILLION NIGHT ELIXIR","marca":"PACO RABANNE","cat":"Masculina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"267","nombre":"LEGEND RED","marca":"MONTBLANC","cat":"Masculina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"268","nombre":"VENDETTA UOMO (2026)","marca":"VALENTINO","cat":"Masculina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"269","nombre":"I WILL","marca":"ARMANI","cat":"Masculina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"400","nombre":"KAOS","marca":"TOUS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"404","nombre":"PURE XS","marca":"PACO RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"405","nombre":"DONNA TRUSSARDI","marca":"TRUSSARDI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"406","nombre":"SI PASIONE","marca":"ARMANI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"407","nombre":"LOVE IN WHITE","marca":"CREED","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"408","nombre":"IDOLE","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"409","nombre":"LA BELLE","marca":"JEAN PAUL GAULTIER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"412","nombre":"JUICY FLOWERS","marca":"MANCERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"413","nombre":"NEROLI PORTOFINO","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"414","nombre":"BLACK ORCHID","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"415","nombre":"SOLEIL BLANC","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"416","nombre":"CHERRY IN JAPAN","marca":"SCADA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"417","nombre":"LOVEME THE ONYX","marca":"TOUS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"418","nombre":"GINZA SHISEIDO","marca":"SHISEIDO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"419","nombre":"VERY GIRL GLAM","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"420","nombre":"FAME","marca":"PACO RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"421","nombre":"PARADOXE","marca":"PRADA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"422","nombre":"ROSE MUSK","marca":"MONTALE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"423","nombre":"OUDMAZING","marca":"MONTALE","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"424","nombre":"FLORA GEORGEUS","marca":"GUCCI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"426","nombre":"ERBA PURA","marca":"XERJOFF","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"427","nombre":"VANILLA 28","marca":"KAYALI","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"428","nombre":"VELVET ROSE & OUD","marca":"JO MALONE","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"0429","nombre":"ANGE OU DEMOUND","marca":"GIVENCHY","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"429","nombre":"PARADOXE INTENSE","marca":"PRADA","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"430","nombre":"GUCCI F.G. MAGNOLIA","marca":"GUCCI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"431","nombre":"DEVOTION INTENSE","marca":"D&G","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"432","nombre":"BARENIA","marca":"HERMES","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"433","nombre":"LOST CHERRY","marca":"TOM FORD","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"434","nombre":"ZADIG","marca":"ZADIG&VOLTAIRE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"435","nombre":"PARDOXE RADICAL ESSENCE","marca":"PRADA","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"436","nombre":"YUM BOUJEE MARSHMALLOW 81","marca":"KAYALI","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"437","nombre":"LA PETITE ROBE NOIR","marca":"GUERLAIN","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"438","nombre":"VERY IRRESISTIBLE","marca":"GIVENCHY","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"439","nombre":"JIMMY CHOO","marca":"JIMMY CHOO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"440","nombre":"POWER OF YOU","marca":"ARMANI","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"441","nombre":"GOOD GIRL SPARKING ICE","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"443","nombre":"Q","marca":"D&G","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"444","nombre":"MYSTERI TOBACCO","marca":"CAROLINA HERRERA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"445","nombre":"SANTAL 33","marca":"LE LABO","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"446","nombre":"YARA","marca":"LATTAFA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"447","nombre":"KHALTAT NIGHT","marca":"ATTAR COLLECION","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"448","nombre":"RAHBA CLASSIC","marca":"LATAFFA","cat":"Masculina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":{"bote_nuevo":{"30":null,"50":null,"100":null},"relleno":{"30":null,"50":null,"100":null}}},{"num":"450","nombre":"GOOD GIRL BLUSH","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"451","nombre":"DYLAN PURPLE","marca":"VERSACE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"452","nombre":"DIVINE","marca":"JEAN PAUL GAULTIER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"453","nombre":"BACARAT ROUGE 540","marca":"MAISON FRANCIS KURKDJIAN","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"454","nombre":"TOY 2 BUBBLE GAM","marca":"MOSCHINO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"455","nombre":"SYMPHONY","marca":"LOUIS VUITTON","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"456","nombre":"DEVOTION","marca":"D&G","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"457","nombre":"GODDES","marca":"BURBERRY","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"459","nombre":"WOMANITY","marca":"T.MUGLER","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"460","nombre":"ALL OF ME","marca":"NARCISO RODRIGUEZ","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"461","nombre":"LOVEME EMERALD","marca":"TOUS","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"462","nombre":"DELINA EXCLUSIF","marca":"PARFUMS DE MARLY","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"463","nombre":"BORN IN ROMA","marca":"VALENTINO","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"464","nombre":"MILLION GOLD","marca":"PACO RABANNE","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"465","nombre":"LA VIE EST BELLA ELEXIR","marca":"LANCOME","cat":"Femenina","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"467","nombre":"LIBRE BERRY CRUSH","marca":"YSL","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"468","nombre":"FLORA GORGEOUS GARDENIA INTENSE","marca":"GUCCI","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"473","nombre":"J'ADORE INTENSE","marca":"DIOR","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"474","nombre":"SI PASSIONE RED BLOOM","marca":"ARMANI","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"480","nombre":"GOOD GIRL JASMINE ABSOLUTE","marca":"CAROLINA HERRERA","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"482","nombre":"VENDETTA DONNA (2026)","marca":"VALENTINO","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"483","nombre":"BLACK OPIUM PINK GLAZE","marca":"Y.S.L","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"484","nombre":"LA FAVORITE","marca":"JEAN PAUL GAULTIER","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"485","nombre":"GODDESS AMBER VANILLA","marca":"BURBERRY","cat":"Femenina","novedad":true,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"681","nombre":"NAXOS","marca":"XERJOFF","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"682","nombre":"LAYTON","marca":"PARFUMS DE MARLY","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null},{"num":"6197","nombre":"ALEJANDRIA","marca":"XERJOFF","cat":"Nicho","novedad":false,"agotado":false,"oculto":false,"fragrantica":"","precios":null}]};
-let currentCat = "Todos", cart = [];
-function fmtEur(n) { return Number(n || 0).toFixed(2).replace(".", ",") + " €"; }
+/*APP_DATA_START*/
+const APP_DATA = {
+  "whatsapp": "34682017002",
+  "envioGratisSesena": 25,
+  "precios": {
+    "Comercial": {
+      "bote_nuevo": { "30": 8, "50": 10, "100": 14 },
+      "relleno": { "30": 6, "50": 8, "100": 12 }
+    },
+    "Nicho": {
+      "bote_nuevo": { "30": 10, "50": 12, "100": 16 },
+      "relleno": { "30": 8, "50": 10, "100": 14 }
+    }
+  },
+  "perfumes": [
+    {"num": "1", "nombre": "AIRE DE LOEWE", "marca": "LOEWE", "cat": "Femenina", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "4", "nombre": "CHANEL Nº5", "marca": "CHANEL", "cat": "Femenina", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "5", "nombre": "ESENCIA DE LOEWE", "marca": "LOEWE", "cat": "Masculina", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "23", "nombre": "AQUA DI GIO", "marca": "G.ARMANI", "cat": "Masculina", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "62", "nombre": "OUD WOOD", "marca": "TOM FORD", "cat": "Nicho", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "64", "nombre": "BIANCO LATTE", "marca": "GIARDINI DI TOSCANA", "cat": "Nicho", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "222", "nombre": "SAUVAGE", "marca": "DIOR", "cat": "Masculina", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""},
+    {"num": "453", "nombre": "BACARAT ROUGE 540", "marca": "MAISON FRANCIS KURKDJIAN", "cat": "Nicho", "novedad": false, "agotado": false, "oculto": false, "fragrantica": ""}
+  ]
+};
+/*APP_DATA_END*/
+
+let currentCat = "Todos";
+let cart = [];
+
+function fmtEur(n) {
+  return Number(n || 0).toFixed(2).replace(".", ",") + " €";
+}
+
 function getFragranticaUrl(p) {
-  if (p && p.fragrantica && String(p.fragrantica).trim().startsWith("http")) return String(p.fragrantica).trim();
-  const brandMap = { "CH":"Carolina Herrera","Y.S.L":"Yves Saint Laurent","YSL":"Yves Saint Laurent","D&G":"Dolce Gabbana","JPG":"Jean Paul Gaultier","P.RABANNE":"Paco Rabanne","G.ARMANI":"Giorgio Armani","T.MUGLER":"Thierry Mugler","T MUGLER":"Thierry Mugler","A.DOMINGUEZ":"Adolfo Dominguez","INTIO":"Initio" };
+  if (p && p.fragrantica && String(p.fragrantica).trim().startsWith("http")) {
+    return String(p.fragrantica).trim();
+  }
+  const brandMap = {
+    "CH": "Carolina Herrera",
+    "Y.S.L": "Yves Saint Laurent",
+    "YSL": "Yves Saint Laurent",
+    "D&G": "Dolce Gabbana",
+    "JPG": "Jean Paul Gaultier",
+    "P.RABANNE": "Paco Rabanne",
+    "G.ARMANI": "Giorgio Armani",
+    "T.MUGLER": "Thierry Mugler",
+    "T MUGLER": "Thierry Mugler",
+    "A.DOMINGUEZ": "Adolfo Dominguez",
+    "INTIO": "Initio"
+  };
   const rawBrand = String((p && p.marca) || "").trim();
-  return "https://www.fragrantica.es/buscar/?q=" + encodeURIComponent(((p && p.nombre) || "") + " " + (brandMap[rawBrand.toUpperCase()] || rawBrand));
+  const cleanBrand = brandMap[rawBrand.toUpperCase()] || rawBrand;
+  const q = encodeURIComponent(`${(p && p.nombre) || ""} ${cleanBrand}`.trim());
+  return `https://www.fragrantica.es/buscar/?q=${q}`;
 }
-function getPrice(p, tipo, size) {
-  if (p.precios && p.precios[tipo] && p.precios[tipo][size] != null) return Number(p.precios[tipo][size]);
-  return Number(APP_DATA.precios[p.cat === "Nicho" ? "Nicho" : "Comercial"][tipo][size]);
+
+function getPrice(perfume, tipo, size) {
+  if (perfume.precios && perfume.precios[tipo] && perfume.precios[tipo][size] != null) {
+    return Number(perfume.precios[tipo][size]);
+  }
+  const tier = perfume.cat === "Nicho" ? "Nicho" : "Comercial";
+  return Number(APP_DATA.precios[tier][tipo][size]);
 }
+
 function renderBanner() {
-  const c = APP_DATA.precios.Comercial, n = APP_DATA.precios.Nicho, freeMin = Number(APP_DATA.envioGratisSesena || 25);
-  document.getElementById("priceBanner").innerHTML = "<div><strong>Comercial:</strong> 30ml " + c.bote_nuevo["30"] + "€ · 50ml " + c.bote_nuevo["50"] + "€ · 100ml " + c.bote_nuevo["100"] + "€</div><div><strong>Nicho:</strong> 30ml " + n.bote_nuevo["30"] + "€ · 50ml " + n.bote_nuevo["50"] + "€ · 100ml " + n.bote_nuevo["100"] + "€</div><div class=\"sesena-highlight\">🚗 Seseña: envío gratis desde " + fmtEur(freeMin) + "</div>";
+  const c = APP_DATA.precios.Comercial;
+  const n = APP_DATA.precios.Nicho;
+  const freeMin = Number(APP_DATA.envioGratisSesena || 25);
+  document.getElementById("priceBanner").innerHTML = `
+    <div><strong>Comercial:</strong> 30ml ${c.bote_nuevo["30"]}€ · 50ml ${c.bote_nuevo["50"]}€ · 100ml ${c.bote_nuevo["100"]}€</div>
+    <div><strong>Nicho:</strong> 30ml ${n.bote_nuevo["30"]}€ · 50ml ${n.bote_nuevo["50"]}€ · 100ml ${n.bote_nuevo["100"]}€</div>
+    <div class="sesena-highlight">🚗 Seseña: envío gratis desde ${fmtEur(freeMin)}</div>
+  `;
 }
+
 function renderProducts() {
   const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-  const filtered = (APP_DATA.perfumes || []).filter(p => !p.oculto && (currentCat === "Todos" || (currentCat === "Novedades" ? p.novedad : p.cat === currentCat)) && (!q || String(p.num).toLowerCase().includes(q) || String(p.nombre).toLowerCase().includes(q) || String(p.marca).toLowerCase().includes(q)));
-  document.getElementById("productList").innerHTML = filtered.length ? filtered.map(p => {
-    const out = Boolean(p.agotado), p50 = getPrice(p, "bote_nuevo", "50");
-    return "<div class=\"item " + (out ? "soldout" : "") + "\"><div><span class=\"ref-pill\">Ref. #" + p.num + "</span>" + (p.novedad ? "<span class=\"tag-new\">NOVEDAD</span>" : "") + (out ? "<span class=\"tag-out\">AGOTADO</span>" : "") + "<div class=\"item-title\">" + p.nombre + "</div><div class=\"item-sub\">Inspirado en " + p.marca + " · Línea " + p.cat + "</div><a class=\"frag-link\" href=\"" + getFragranticaUrl(p) + "\" target=\"_blank\" rel=\"noopener noreferrer\">🌸 Ver notas en Fragrantica ↗</a></div><div class=\"controls\"><select id=\"type_" + p.num + "\" onchange=\"updateItemBtn('" + p.num + "')\" " + (out ? "disabled" : "") + "><option value=\"bote_nuevo\">🧴 Frasco Nuevo</option><option value=\"relleno\">♻️ Recarga (Seseña)</option></select><select id=\"size_" + p.num + "\" onchange=\"updateItemBtn('" + p.num + "')\" " + (out ? "disabled" : "") + "><option value=\"30\">30 ml (" + getPrice(p, "bote_nuevo", "30") + "€)</option><option value=\"50\" selected>50 ml (" + p50 + "€)</option><option value=\"100\">100 ml (" + getPrice(p, "bote_nuevo", "100") + "€)</option></select><button class=\"btn-add\" id=\"btn_" + p.num + "\" onclick=\"addToCart('" + p.num + "')\" " + (out ? "disabled" : "") + ">" + (out ? "Agotado" : "+ " + p50 + "€") + "</button></div></div>";
-  }).join("") : "<div class=\"item\" style=\"text-align:center;color:var(--muted);\">No se encontraron perfumes.</div>";
+  const list = document.getElementById("productList");
+  const filtered = (APP_DATA.perfumes || []).filter(p => {
+    if (p.oculto) return false;
+    if (currentCat === "Novedades" && !p.novedad) return false;
+    if (currentCat !== "Todos" && currentCat !== "Novedades" && p.cat !== currentCat) return false;
+    if (!q) return true;
+    return String(p.num).toLowerCase().includes(q) || String(p.nombre).toLowerCase().includes(q) || String(p.marca).toLowerCase().includes(q);
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="item" style="text-align:center;color:var(--muted);">No se encontraron perfumes con ese criterio.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(p => {
+    const out = Boolean(p.agotado);
+    const p50 = getPrice(p, "bote_nuevo", "50");
+    return `
+      <div class="item ${out ? "soldout" : ""}">
+        <div class="item-top">
+          <div>
+            <span class="ref-pill">Ref. #${p.num}</span>
+            ${p.novedad ? `<span class="tag-new">NOVEDAD</span>` : ""}
+            ${out ? `<span class="tag-out">AGOTADO</span>` : ""}
+            <div class="item-title">${p.nombre}</div>
+            <div class="item-sub">Inspirado en ${p.marca} · Línea ${p.cat}</div>
+            <a class="frag-link" href="${getFragranticaUrl(p)}" target="_blank" rel="noopener noreferrer">🌸 Ver notas en Fragrantica ↗</a>
+          </div>
+        </div>
+        <div class="controls">
+          <select id="type_${p.num}" onchange="updateItemBtn('${p.num}')" ${out ? "disabled" : ""}>
+            <option value="bote_nuevo">🧴 Frasco Nuevo</option>
+            <option value="relleno">♻️ Recarga (Seseña)</option>
+          </select>
+          <select id="size_${p.num}" onchange="updateItemBtn('${p.num}')" ${out ? "disabled" : ""}>
+            <option value="30">30 ml (${getPrice(p, "bote_nuevo", "30")}€)</option>
+            <option value="50" selected>50 ml (${p50}€)</option>
+            <option value="100">100 ml (${getPrice(p, "bote_nuevo", "100")}€)</option>
+          </select>
+          <button class="btn-add" id="btn_${p.num}" onclick="addToCart('${p.num}')" ${out ? "disabled" : ""}>
+            ${out ? "Agotado" : "+ " + p50 + "€"}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
+
 function updateItemBtn(num) {
   const p = (APP_DATA.perfumes || []).find(x => String(x.num) === String(num));
   if (!p) return;
-  const tipo = document.getElementById("type_" + num).value, sizeSel = document.getElementById("size_" + num);
-  ["30","50","100"].forEach((sz, i) => { sizeSel.options[i].text = sz + " ml (" + getPrice(p, tipo, sz) + "€)"; });
-  document.getElementById("btn_" + num).textContent = "+ " + getPrice(p, tipo, sizeSel.value) + "€";
+  const tipo = document.getElementById("type_" + num).value;
+  const sizeSel = document.getElementById("size_" + num);
+  const curSize = sizeSel.value;
+  ["30", "50", "100"].forEach((sz, idx) => {
+    sizeSel.options[idx].text = `${sz} ml (${getPrice(p, tipo, sz)}€)`;
+  });
+  document.getElementById("btn_" + num).textContent = `+ ${getPrice(p, tipo, curSize)}€`;
 }
+
 function addToCart(num) {
   const p = (APP_DATA.perfumes || []).find(x => String(x.num) === String(num));
   if (!p || p.agotado) return;
-  const tipo = document.getElementById("type_" + num).value, size = document.getElementById("size_" + num).value, unitPrice = getPrice(p, tipo, size);
+  const tipo = document.getElementById("type_" + num).value;
+  const size = document.getElementById("size_" + num).value;
+  const unitPrice = getPrice(p, tipo, size);
   const ex = cart.find(i => String(i.num) === String(num) && i.tipo === tipo && i.size === size);
-  if (ex) ex.qty += 1; else cart.push({ num: p.num, nombre: p.nombre, tipo, size, unitPrice, qty: 1 });
+  if (ex) ex.qty += 1;
+  else cart.push({ num: p.num, nombre: p.nombre, tipo, size, unitPrice, qty: 1 });
   updateBar();
 }
+
 function updateBar() {
-  const qty = cart.reduce((s, i) => s + i.qty, 0), sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0), freeMin = Number(APP_DATA.envioGratisSesena || 25), diff = freeMin - sub;
-  document.getElementById("barTotal").textContent = fmtEur(sub) + " (" + qty + " uds)";
-  document.getElementById("barSub").textContent = sub <= 0 ? "Envío gratis en Seseña desde " + fmtEur(freeMin) : (diff > 0 ? "Seseña: envío gratis desde " + fmtEur(freeMin) + " (faltan " + fmtEur(diff) + ")" : "✓ Envío GRATIS en Seseña conseguido");
-}
-function openCart() { document.getElementById("cartModal").classList.add("open"); updateCartUI(); }
-function closeCart() { document.getElementById("cartModal").classList.remove("open"); }
-function changeQty(idx, d) { cart[idx].qty += d; if (cart[idx].qty <= 0) cart.splice(idx, 1); updateBar(); updateCartUI(); }
-function updateCartUI() {
-  const box = document.getElementById("cartItems"), mode = document.getElementById("deliveryMode").value;
-  document.getElementById("addressWrap").style.display = mode === "quinon" ? "none" : "block";
-  if (!cart.length) { box.innerHTML = "<p style=\"color:var(--muted);\">Tu cesta está vacía.</p>"; document.getElementById("deliveryAlert").innerHTML = ""; document.getElementById("modalTotal").textContent = "0,00 €"; document.getElementById("btnSendWA").disabled = true; return; }
-  box.innerHTML = cart.map((it, idx) => "<div class=\"cart-line\"><div><strong>#" + it.num + " " + it.nombre + "</strong><br><span style=\"color:var(--muted);font-size:0.78rem;\">" + it.size + "ml · " + (it.tipo === "bote_nuevo" ? "Frasco Nuevo" : "Recarga") + " · " + it.unitPrice + "€/ud</span></div><div class=\"qty-box\"><button type=\"button\" class=\"qty-btn\" onclick=\"changeQty(" + idx + ",-1)\">-</button><span>" + it.qty + "</span><button type=\"button\" class=\"qty-btn\" onclick=\"changeQty(" + idx + ",1)\">+</button></div></div>").join("");
-  const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0), freeMin = Number(APP_DATA.envioGratisSesena || 25), sesenaCost = Number(APP_DATA.costeEnvioSesena || 2.5), nacCost = Number(APP_DATA.costeEnvioNacional || 5.5);
-  let ship = 0, alertHtml = "", blocked = false;
-  if (mode === "quinon") alertHtml = "<div class=\"alert-box alert-ok\">📍 Recogida y prueba gratuita en El Quiñón (Seseña).</div>";
-  else if (mode === "sesena") {
-    if (sub >= freeMin) alertHtml = "<div class=\"alert-box alert-ok\">🚗 <strong>¡Envío gratis en Seseña!</strong> Tu pedido alcanza los " + fmtEur(freeMin) + ".</div>";
-    else { ship = sesenaCost; alertHtml = "<div class=\"alert-box alert-warn\">🚗 En Seseña el envío es <strong>GRATIS desde " + fmtEur(freeMin) + "</strong>. Te faltan <strong>" + fmtEur(freeMin - sub) + "</strong> para envío gratis (ahora +" + fmtEur(sesenaCost) + ").</div>"; }
-  } else if (mode === "nacional") {
-    if (cart.some(i => i.tipo === "relleno")) { blocked = true; alertHtml = "<div class=\"alert-box alert-err\">⚠️ Las recargas solo están disponibles en Seseña. Cambia a Frasco Nuevo para envío nacional.</div>"; }
-    else { ship = nacCost; alertHtml = "<div class=\"alert-box alert-warn\">📦 Envío Nacional (+" + fmtEur(nacCost) + ").</div>"; }
+  const qty = cart.reduce((s, i) => s + i.qty, 0);
+  const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0);
+  const freeMin = Number(APP_DATA.envioGratisSesena || 25);
+  const diff = freeMin - sub;
+
+  document.getElementById("barTotal").textContent = `${fmtEur(sub)} (${qty} uds)`;
+  if (sub <= 0) {
+    document.getElementById("barSub").textContent = `Envío gratis en Seseña desde ${fmtEur(freeMin)}`;
+  } else if (diff > 0) {
+    document.getElementById("barSub").textContent = `Seseña: envío gratis desde ${fmtEur(freeMin)} (faltan ${fmtEur(diff)})`;
+  } else {
+    document.getElementById("barSub").textContent = `✓ Envío GRATIS en Seseña conseguido`;
   }
+}
+
+function openCart() {
+  document.getElementById("cartModal").classList.add("open");
+  updateCartUI();
+}
+
+function closeCart() {
+  document.getElementById("cartModal").classList.remove("open");
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateBar();
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const box = document.getElementById("cartItems");
+  const mode = document.getElementById("deliveryMode").value;
+  document.getElementById("addressWrap").style.display = mode === "quinon" ? "none" : "block";
+
+  if (!cart.length) {
+    box.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;">Tu cesta está vacía.</p>`;
+    document.getElementById("deliveryAlert").innerHTML = "";
+    document.getElementById("modalTotal").textContent = "0,00 €";
+    document.getElementById("modalShipNote").textContent = "";
+    document.getElementById("btnSendWA").disabled = true;
+    return;
+  }
+
+  box.innerHTML = cart.map((it, idx) => `
+    <div class="cart-line">
+      <div>
+        <strong>#${it.num} ${it.nombre}</strong><br>
+        <span style="color:var(--muted);font-size:0.78rem;">
+          ${it.size}ml · ${it.tipo === "bote_nuevo" ? "Frasco Nuevo" : "Recarga"} · ${it.unitPrice}€/ud
+        </span>
+      </div>
+      <div class="qty-box">
+        <button type="button" class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
+        <span>${it.qty}</span>
+        <button type="button" class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+      </div>
+    </div>
+  `).join("");
+
+  const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0);
+  const freeMin = Number(APP_DATA.envioGratisSesena || 25);
+  let alertHtml = "";
+  let shipNote = "";
+  let blocked = false;
+  const hasRefill = cart.some(i => i.tipo === "relleno");
+
+  if (mode === "quinon") {
+    alertHtml = `<div class="alert-box alert-ok">📍 Recogida y prueba gratuita en El Quiñón (Seseña).</div>`;
+    shipNote = "Sin gastos de envío";
+  } else if (mode === "sesena") {
+    if (sub >= freeMin) {
+      alertHtml = `<div class="alert-box alert-ok">🚗 <strong>¡Envío gratis en Seseña!</strong> Tu pedido alcanza los ${fmtEur(freeMin)}.</div>`;
+      shipNote = "Envío en Seseña: GRATIS";
+    } else {
+      const falta = freeMin - sub;
+      alertHtml = `<div class="alert-box alert-warn">🚗 En Seseña el envío es <strong>GRATIS desde ${fmtEur(freeMin)}</strong> (te faltan <strong>${fmtEur(falta)}</strong>). Al no llegar al mínimo, te confirmaré el pequeño suplemento de envío por WhatsApp antes de cerrar el pedido.</div>`;
+      shipNote = "+ suplemento envío Seseña (a confirmar por WhatsApp)";
+    }
+  } else if (mode === "nacional") {
+    if (hasRefill) {
+      blocked = true;
+      alertHtml = `<div class="alert-box alert-err">⚠️ Las recargas solo están disponibles en Seseña. Cambia a Frasco Nuevo para envío nacional.</div>`;
+      shipNote = "";
+    } else {
+      alertHtml = `<div class="alert-box alert-warn">📦 Al enviar el pedido te confirmaré por WhatsApp el coste exacto de envío tras comprobar la tarifa de Correos según el peso y destino.</div>`;
+      shipNote = "+ envío Correos (a confirmar según peso/destino)";
+    }
+  }
+
   document.getElementById("deliveryAlert").innerHTML = alertHtml;
-  document.getElementById("modalTotal").textContent = fmtEur(sub + ship);
+  document.getElementById("modalTotal").textContent = fmtEur(sub);
+  document.getElementById("modalShipNote").textContent = shipNote;
   document.getElementById("btnSendWA").disabled = blocked;
 }
+
 function sendWhatsApp() {
-  const name = (document.getElementById("custName").value || "").trim(), mode = document.getElementById("deliveryMode").value, addr = (document.getElementById("custAddress").value || "").trim(), notes = (document.getElementById("custNotes").value || "").trim();
+  const name = (document.getElementById("custName").value || "").trim();
+  const mode = document.getElementById("deliveryMode").value;
+  const addr = (document.getElementById("custAddress").value || "").trim();
+  const notes = (document.getElementById("custNotes").value || "").trim();
+
   if (!name) { alert("Por favor, escribe tu nombre."); return; }
   if (mode !== "quinon" && !addr) { alert("Indica tu dirección o localidad de entrega."); return; }
-  const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0), freeMin = Number(APP_DATA.envioGratisSesena || 25);
-  let ship = 0;
-  if (mode === "sesena" && sub < freeMin) ship = Number(APP_DATA.costeEnvioSesena || 2.5);
-  if (mode === "nacional") ship = Number(APP_DATA.costeEnvioNacional || 5.5);
-  const total = sub + ship;
-  const lines = cart.map(i => "• Ref #" + i.num + " " + i.nombre + " (" + i.size + "ml · " + (i.tipo === "bote_nuevo" ? "Frasco" : "Recarga") + ") x" + i.qty + " = " + (i.qty * i.unitPrice).toFixed(2) + "€").join("\n");
-  const payloadObj = JSON.stringify({ c:name, e:mode, d:addr, n:notes, env:ship, items:cart.map(i => [i.num, i.size, i.tipo === "bote_nuevo" ? "B" : "R", i.qty, i.unitPrice]) });
-  const msg = "✨ *NUEVO PEDIDO - EL ORIGEN DEL PERFUME* ✨\n\n👤 *Cliente:* " + name + "\n📦 *Entrega:* " + mode + (addr ? "\n📍 *Dirección:* " + addr : "") + (notes ? "\n📝 *Notas:* " + notes : "") + "\n\n*Detalle del pedido:*\n" + lines + (ship > 0 ? "\n🚚 *Envío:* " + ship.toFixed(2) + "€" : (mode === "sesena" ? "\n🚚 *Envío Seseña:* GRATIS" : "")) + "\n💰 *TOTAL:* " + total.toFixed(2) + "€\n\n---TPV---\n" + payloadObj;
-  window.open("https://wa.me/" + APP_DATA.whatsapp + "?text=" + encodeURIComponent(msg), "_blank");
+
+  const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0);
+  const freeMin = Number(APP_DATA.envioGratisSesena || 25);
+
+  let shipText = "";
+  if (mode === "quinon") {
+    shipText = `🚚 *Entrega:* Recogida en El Quiñón (Gratis)\n`;
+  } else if (mode === "sesena") {
+    shipText = sub >= freeMin
+      ? `🚚 *Envío Seseña:* GRATIS (pedido ≥ ${freeMin}€)\n`
+      : `🚚 *Envío Seseña:* Suplemento a confirmar por WhatsApp (< ${freeMin}€)\n`;
+  } else if (mode === "nacional") {
+    shipText = `🚚 *Envío Nacional:* A confirmar según tarifa de Correos\n`;
+  }
+
+  const lines = cart.map(i =>
+    `• Ref #${i.num} ${i.nombre} (${i.size}ml · ${i.tipo === "bote_nuevo" ? "Frasco" : "Recarga"}) x${i.qty} = ${(i.qty * i.unitPrice).toFixed(2)}€`
+  ).join("\n");
+
+  const payload = JSON.stringify({
+    c: name,
+    e: mode,
+    d: addr,
+    n: notes,
+    env: 0,
+    items: cart.map(i => [i.num, i.size, i.tipo === "bote_nuevo" ? "B" : "R", i.qty, i.unitPrice])
+  });
+
+  const msg =
+    `✨ *NUEVO PEDIDO - EL ORIGEN DEL PERFUME* ✨\n\n` +
+    `👤 *Cliente:* ${name}\n` +
+    `📦 *Modalidad:* ${mode}\n` +
+    (addr ? `📍 *Dirección:* ${addr}\n` : "") +
+    (notes ? `📝 *Notas:* ${notes}\n` : "") +
+    `\n*Detalle del pedido:*\n${lines}\n` +
+    shipText +
+    `💰 *Subtotal perfumes:* ${sub.toFixed(2)}€\n\n---TPV---\n${payload}`;
+
+  window.open(`https://wa.me/${APP_DATA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
 }
-document.querySelectorAll("#catTabs .tab").forEach(btn => btn.addEventListener("click", () => { document.querySelectorAll("#catTabs .tab").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentCat = btn.dataset.cat; renderProducts(); }));
+
+document.querySelectorAll("#catTabs .tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#catTabs .tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentCat = btn.dataset.cat;
+    renderProducts();
+  });
+});
+
 document.getElementById("searchInput").addEventListener("input", renderProducts);
-renderBanner(); renderProducts(); updateBar();
+
+renderBanner();
+renderProducts();
+updateBar();
 </script>
 </body>
 </html>
