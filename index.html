@@ -246,7 +246,7 @@
 
   .field { margin-top: 10px; }
   .field label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
-  .field input, .field select, .field textarea {
+  .field input, .field select {
     width: 100%;
     background: var(--card-2);
     border: 1px solid var(--border);
@@ -261,11 +261,28 @@
     padding: 10px;
     border-radius: 10px;
     font-size: 0.82rem;
-    line-height: 1.35;
+    line-height: 1.38;
   }
   .alert-warn { background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d; }
   .alert-err { background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; }
   .alert-ok { background: rgba(34,197,94,0.14); border: 1px solid rgba(34,197,94,0.4); color: #86efac; }
+
+  .total-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+  .total-subnote {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: #fcd34d;
+    text-align: right;
+  }
 
   .btn-wa {
     width: 100%;
@@ -341,17 +358,20 @@
       <input type="text" id="custName" placeholder="Ej: Laura García">
     </div>
     <div class="field" id="addressWrap" style="display:none;">
-      <label>Dirección / Zona de entrega *</label>
-      <input type="text" id="custAddress" placeholder="Calle, portal, piso o localidad">
+      <label>Dirección / Localidad de entrega *</label>
+      <input type="text" id="custAddress" placeholder="Calle, portal, piso, código postal o localidad">
     </div>
     <div class="field">
       <label>Notas (opcional)</label>
       <input type="text" id="custNotes" placeholder="Ej: Prefiero recoger por la tarde / Bizum">
     </div>
 
-    <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:1.05rem;font-weight:800;">
-      <span>Total estimado:</span>
-      <span id="modalTotal" style="color:var(--gold);">0,00 €</span>
+    <div class="total-row">
+      <span>Total perfumes:</span>
+      <div>
+        <span id="modalTotal" style="color:var(--gold);">0,00 €</span>
+        <span id="modalShipNote" class="total-subnote"></span>
+      </div>
     </div>
 
     <button class="btn-wa" id="btnSendWA" onclick="sendWhatsApp()">📲 Enviar Pedido por WhatsApp</button>
@@ -363,8 +383,6 @@
 const APP_DATA = {
   "whatsapp": "34682017002",
   "envioGratisSesena": 25,
-  "costeEnvioSesena": 2.5,
-  "costeEnvioNacional": 5.5,
   "precios": {
     "Comercial": {
       "bote_nuevo": { "30": 8, "50": 10, "100": 14 },
@@ -552,6 +570,7 @@ function updateCartUI() {
     box.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;">Tu cesta está vacía.</p>`;
     document.getElementById("deliveryAlert").innerHTML = "";
     document.getElementById("modalTotal").textContent = "0,00 €";
+    document.getElementById("modalShipNote").textContent = "";
     document.getElementById("btnSendWA").disabled = true;
     return;
   }
@@ -574,36 +593,37 @@ function updateCartUI() {
 
   const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0);
   const freeMin = Number(APP_DATA.envioGratisSesena || 25);
-  const sesenaCost = Number(APP_DATA.costeEnvioSesena || 2.5);
-  const nacCost = Number(APP_DATA.costeEnvioNacional || 5.5);
-
-  let ship = 0;
   let alertHtml = "";
+  let shipNote = "";
   let blocked = false;
   const hasRefill = cart.some(i => i.tipo === "relleno");
 
   if (mode === "quinon") {
     alertHtml = `<div class="alert-box alert-ok">📍 Recogida y prueba gratuita en El Quiñón (Seseña).</div>`;
+    shipNote = "Sin gastos de envío";
   } else if (mode === "sesena") {
     if (sub >= freeMin) {
       alertHtml = `<div class="alert-box alert-ok">🚗 <strong>¡Envío gratis en Seseña!</strong> Tu pedido alcanza los ${fmtEur(freeMin)}.</div>`;
+      shipNote = "Envío en Seseña: GRATIS";
     } else {
-      ship = sesenaCost;
       const falta = freeMin - sub;
-      alertHtml = `<div class="alert-box alert-warn">🚗 En Seseña el envío es <strong>GRATIS desde ${fmtEur(freeMin)}</strong>. Te faltan <strong>${fmtEur(falta)}</strong> para envío gratis (ahora +${fmtEur(sesenaCost)}).</div>`;
+      alertHtml = `<div class="alert-box alert-warn">🚗 En Seseña el envío es <strong>GRATIS desde ${fmtEur(freeMin)}</strong> (te faltan <strong>${fmtEur(falta)}</strong>). Al no llegar al mínimo, te confirmaré el pequeño suplemento de envío por WhatsApp antes de cerrar el pedido.</div>`;
+      shipNote = "+ suplemento envío Seseña (a confirmar por WhatsApp)";
     }
   } else if (mode === "nacional") {
     if (hasRefill) {
       blocked = true;
       alertHtml = `<div class="alert-box alert-err">⚠️ Las recargas solo están disponibles en Seseña. Cambia a Frasco Nuevo para envío nacional.</div>`;
+      shipNote = "";
     } else {
-      ship = nacCost;
-      alertHtml = `<div class="alert-box alert-warn">📦 Envío Nacional (+${fmtEur(nacCost)}).</div>`;
+      alertHtml = `<div class="alert-box alert-warn">📦 Al enviar el pedido te confirmaré por WhatsApp el coste exacto de envío tras comprobar la tarifa de Correos según el peso y destino.</div>`;
+      shipNote = "+ envío Correos (a confirmar según peso/destino)";
     }
   }
 
   document.getElementById("deliveryAlert").innerHTML = alertHtml;
-  document.getElementById("modalTotal").textContent = fmtEur(sub + ship);
+  document.getElementById("modalTotal").textContent = fmtEur(sub);
+  document.getElementById("modalShipNote").textContent = shipNote;
   document.getElementById("btnSendWA").disabled = blocked;
 }
 
@@ -618,10 +638,17 @@ function sendWhatsApp() {
 
   const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0);
   const freeMin = Number(APP_DATA.envioGratisSesena || 25);
-  let ship = 0;
-  if (mode === "sesena" && sub < freeMin) ship = Number(APP_DATA.costeEnvioSesena || 2.5);
-  if (mode === "nacional") ship = Number(APP_DATA.costeEnvioNacional || 5.5);
-  const total = sub + ship;
+
+  let shipText = "";
+  if (mode === "quinon") {
+    shipText = `🚚 *Entrega:* Recogida en El Quiñón (Gratis)\n`;
+  } else if (mode === "sesena") {
+    shipText = sub >= freeMin
+      ? `🚚 *Envío Seseña:* GRATIS (pedido ≥ ${freeMin}€)\n`
+      : `🚚 *Envío Seseña:* Suplemento a confirmar por WhatsApp (< ${freeMin}€)\n`;
+  } else if (mode === "nacional") {
+    shipText = `🚚 *Envío Nacional:* A confirmar según tarifa de Correos\n`;
+  }
 
   const lines = cart.map(i =>
     `• Ref #${i.num} ${i.nombre} (${i.size}ml · ${i.tipo === "bote_nuevo" ? "Frasco" : "Recarga"}) x${i.qty} = ${(i.qty * i.unitPrice).toFixed(2)}€`
@@ -632,19 +659,19 @@ function sendWhatsApp() {
     e: mode,
     d: addr,
     n: notes,
-    env: ship,
+    env: 0,
     items: cart.map(i => [i.num, i.size, i.tipo === "bote_nuevo" ? "B" : "R", i.qty, i.unitPrice])
   });
 
   const msg =
     `✨ *NUEVO PEDIDO - EL ORIGEN DEL PERFUME* ✨\n\n` +
     `👤 *Cliente:* ${name}\n` +
-    `📦 *Entrega:* ${mode}\n` +
+    `📦 *Modalidad:* ${mode}\n` +
     (addr ? `📍 *Dirección:* ${addr}\n` : "") +
     (notes ? `📝 *Notas:* ${notes}\n` : "") +
     `\n*Detalle del pedido:*\n${lines}\n` +
-    (ship > 0 ? `🚚 *Envío:* ${ship.toFixed(2)}€\n` : (mode === "sesena" ? `🚚 *Envío Seseña:* GRATIS\n` : "")) +
-    `💰 *TOTAL:* ${total.toFixed(2)}€\n\n---TPV---\n${payload}`;
+    shipText +
+    `💰 *Subtotal perfumes:* ${sub.toFixed(2)}€\n\n---TPV---\n${payload}`;
 
   window.open(`https://wa.me/${APP_DATA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
 }
