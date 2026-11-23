@@ -9,7 +9,7 @@
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); padding-bottom:98px; }
   header { background:linear-gradient(135deg,#161922 0%,#0d0f14 100%); border-bottom:1px solid var(--border); padding:16px 14px 12px; position:sticky; top:0; z-index:30; }
-  .brand { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .brand { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
   .brand h1 { margin:0; font-size:1.18rem; color:var(--gold); }
   .brand small { display:block; color:var(--muted); font-size:0.76rem; }
   .header-badges { display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
@@ -52,8 +52,9 @@
   .qty-box { display:flex; align-items:center; gap:6px; }
   .qty-btn { width:26px; height:26px; border-radius:7px; border:1px solid var(--border); background:var(--card-2); color:var(--text); font-weight:700; cursor:pointer; }
   .field { margin-top:10px; }
+  .field-row2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
   .field label { display:block; font-size:0.8rem; color:var(--muted); margin-bottom:4px; }
-  .field input, .field select { width:100%; background:var(--card-2); border:1px solid var(--border); color:var(--text); padding:9px 10px; border-radius:9px; font-size:0.9rem; }
+  .field input, .field select, .field-row2 input { width:100%; background:var(--card-2); border:1px solid var(--border); color:var(--text); padding:9px 10px; border-radius:9px; font-size:0.9rem; }
   .alert-box { margin-top:10px; padding:10px; border-radius:10px; font-size:0.82rem; line-height:1.38; }
   .alert-warn { background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#fcd34d; }
   .alert-err { background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.4); color:#fca5a5; }
@@ -69,7 +70,7 @@
   <div class="brand">
     <div><h1>El Origen del Perfume</h1><small>Equivalencias de alta duración · Seseña y Envíos</small></div>
     <div class="header-badges">
-      <a class="pdf-btn" href="https://origendelperfume.github.io/catalogo/catalogo.pdf">📄 Ver Catálogo PDF</a>
+      <a class="pdf-btn" href="./catalogo.pdf">📄 Catálogo PDF ↗</a>
       <span class="badge-zone">📍 El Quiñón / Seseña</span>
     </div>
   </div>
@@ -94,8 +95,15 @@
     <div id="cartItems"></div>
     <div class="field"><label>Modalidad de entrega *</label><select id="deliveryMode" onchange="updateCartUI()"><option value="quinon">📍 Recogida y prueba en El Quiñón (Gratis)</option><option value="sesena">🚗 Reparto a domicilio en Seseña (Gratis ≥ 25€)</option><option value="nacional">📦 Envío Nacional por Correos / Mensajería</option></select></div>
     <div id="deliveryAlert"></div>
-    <div class="field"><label>Tu Nombre *</label><input type="text" id="custName" placeholder="Ej: Laura García"></div>
-    <div class="field" id="addressWrap" style="display:none;"><label>Dirección / Localidad de entrega *</label><input type="text" id="custAddress" placeholder="Calle, portal, piso, código postal o localidad"></div>
+    <div class="field-row2">
+      <div><label>Nombre y Apellidos *</label><input type="text" id="custName" placeholder="Ej: Laura García López"></div>
+      <div><label>Teléfono WhatsApp *</label><input type="tel" id="custPhone" placeholder="Ej: 612345678"></div>
+    </div>
+    <div class="field" id="addressWrap"><label>Dirección completa (calle, nº, piso) *</label><input type="text" id="custAddress" placeholder="Ej: Avda. de la Mancha 14, 3º B"></div>
+    <div class="field-row2" id="cityCpWrap">
+      <div><label>Ciudad / Localidad *</label><input type="text" id="custCity" placeholder="Ej: Seseña / Madrid"></div>
+      <div><label>Código Postal (CP) *</label><input type="text" id="custCP" placeholder="Ej: 45223"></div>
+    </div>
     <div class="field"><label>Notas (opcional)</label><input type="text" id="custNotes" placeholder="Ej: Prefiero recoger por la tarde / Bizum"></div>
     <div class="total-row"><span>Total perfumes:</span><div><span id="modalTotal" style="color:var(--gold);">0,00 €</span><span id="modalShipNote" class="total-subnote"></span></div></div>
     <button class="btn-wa" id="btnSendWA" onclick="sendWhatsApp()">📲 Enviar Pedido por WhatsApp</button>
@@ -152,7 +160,6 @@ function closeCart() { document.getElementById("cartModal").classList.remove("op
 function changeQty(idx, d) { cart[idx].qty += d; if (cart[idx].qty <= 0) cart.splice(idx, 1); updateBar(); updateCartUI(); }
 function updateCartUI() {
   const box = document.getElementById("cartItems"), mode = document.getElementById("deliveryMode").value;
-  document.getElementById("addressWrap").style.display = mode === "quinon" ? "none" : "block";
   if (!cart.length) { box.innerHTML = "<p style=\"color:var(--muted);\">Tu cesta está vacía.</p>"; document.getElementById("deliveryAlert").innerHTML = ""; document.getElementById("modalTotal").textContent = "0,00 €"; document.getElementById("modalShipNote").textContent = ""; document.getElementById("btnSendWA").disabled = true; return; }
   box.innerHTML = cart.map((it, idx) => "<div class=\"cart-line\"><div><strong>#" + it.num + " " + it.nombre + "</strong><br><span style=\"color:var(--muted);font-size:0.78rem;\">" + it.size + "ml · " + (it.tipo === "bote_nuevo" ? "Frasco Nuevo" : "Recarga") + " · " + it.unitPrice + "€/ud</span></div><div class=\"qty-box\"><button type=\"button\" class=\"qty-btn\" onclick=\"changeQty(" + idx + ",-1)\">-</button><span>" + it.qty + "</span><button type=\"button\" class=\"qty-btn\" onclick=\"changeQty(" + idx + ",1)\">+</button></div></div>").join("");
   const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0), freeMin = Number(APP_DATA.envioGratisSesena || 25);
@@ -171,17 +178,24 @@ function updateCartUI() {
   document.getElementById("btnSendWA").disabled = blocked;
 }
 function sendWhatsApp() {
-  const name = (document.getElementById("custName").value || "").trim(), mode = document.getElementById("deliveryMode").value, addr = (document.getElementById("custAddress").value || "").trim(), notes = (document.getElementById("custNotes").value || "").trim();
-  if (!name) { alert("Por favor, escribe tu nombre."); return; }
-  if (mode !== "quinon" && !addr) { alert("Indica tu dirección o localidad de entrega."); return; }
+  const name = (document.getElementById("custName").value || "").trim();
+  const phone = (document.getElementById("custPhone").value || "").trim();
+  const mode = document.getElementById("deliveryMode").value;
+  const addr = (document.getElementById("custAddress").value || "").trim();
+  const city = (document.getElementById("custCity").value || "").trim();
+  const cp = (document.getElementById("custCP").value || "").trim();
+  const notes = (document.getElementById("custNotes").value || "").trim();
+  if (!name) { alert("Por favor, escribe tu nombre y apellidos."); return; }
+  if (!phone) { alert("Por favor, escribe tu número de teléfono."); return; }
+  if (mode !== "quinon" && (!addr || !city || !cp)) { alert("Indica tu dirección completa, ciudad y código postal para el envío."); return; }
   const sub = cart.reduce((s, i) => s + i.qty * i.unitPrice, 0), freeMin = Number(APP_DATA.envioGratisSesena || 25);
   let shipText = "";
   if (mode === "quinon") shipText = "🚚 *Entrega:* Recogida en El Quiñón (Gratis)\n";
   else if (mode === "sesena") shipText = sub >= freeMin ? "🚚 *Envío Seseña:* GRATIS (pedido ≥ " + freeMin + "€)\n" : "🚚 *Envío Seseña:* Suplemento a confirmar por WhatsApp (< " + freeMin + "€)\n";
   else if (mode === "nacional") shipText = "🚚 *Envío Nacional:* A confirmar según tarifa de Correos\n";
   const lines = cart.map(i => "• Ref #" + i.num + " " + i.nombre + " (" + i.size + "ml · " + (i.tipo === "bote_nuevo" ? "Frasco" : "Recarga") + ") x" + i.qty + " = " + (i.qty * i.unitPrice).toFixed(2) + "€").join("\n");
-  const payloadObj = JSON.stringify({ c:name, e:mode, d:addr, n:notes, env:0, items:cart.map(i => [i.num, i.size, i.tipo === "bote_nuevo" ? "B" : "R", i.qty, i.unitPrice]) });
-  const msg = "✨ *NUEVO PEDIDO - EL ORIGEN DEL PERFUME* ✨\n\n👤 *Cliente:* " + name + "\n📦 *Modalidad:* " + mode + (addr ? "\n📍 *Dirección:* " + addr : "") + (notes ? "\n📝 *Notas:* " + notes : "") + "\n\n*Detalle del pedido:*\n" + lines + "\n" + shipText + "💰 *Subtotal perfumes:* " + sub.toFixed(2) + "€\n\n---TPV---\n" + payloadObj;
+  const payloadObj = JSON.stringify({ c:name, t:phone, d:addr, ci:city, cp:cp, e:mode, n:notes, env:0, items:cart.map(i => [i.num, i.size, i.tipo === "bote_nuevo" ? "B" : "R", i.qty, i.unitPrice]) });
+  const msg = "✨ *NUEVO PEDIDO - EL ORIGEN DEL PERFUME* ✨\n\n👤 *Cliente:* " + name + "\n📞 *Teléfono:* " + phone + "\n📦 *Modalidad:* " + mode + (addr ? "\n📍 *Dirección:* " + addr : "") + (city ? "\n🏙️ *Ciudad:* " + city : "") + (cp ? "\n📮 *C.P.:* " + cp : "") + (notes ? "\n📝 *Notas:* " + notes : "") + "\n\n*Detalle del pedido:*\n" + lines + "\n" + shipText + "💰 *Subtotal perfumes:* " + sub.toFixed(2) + "€\n\n---TPV---\n" + payloadObj;
   window.open("https://wa.me/" + APP_DATA.whatsapp + "?text=" + encodeURIComponent(msg), "_blank");
 }
 document.querySelectorAll("#catTabs .tab").forEach(btn => btn.addEventListener("click", () => { document.querySelectorAll("#catTabs .tab").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentCat = btn.dataset.cat; renderProducts(); }));
