@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0c0e13">
+<link rel="icon" href="data:,">
 <link rel="manifest" href="./manifest.json">
 <title>TPV · El Origen del Perfume (Cloud v5.1)</title>
 <style>
@@ -2198,6 +2199,7 @@ function exportClientWeb() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="data:,">
 <link rel="manifest" href="./manifest.json">
 <title>El Origen del Perfume | Catálogo y Pedidos</title>
 <style>
@@ -2305,8 +2307,8 @@ function exportClientWeb() {
     <button class="btn-wa" id="btnSendWA" onclick="sendWhatsApp()">📲 Enviar Pedido por WhatsApp</button>
   </div>
 </div>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"><\/script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"><\/script>
 <script>
 const FIREBASE_CONFIG = ${JSON.stringify(FIREBASE_CONFIG)};
 let APP_DATA = ${JSON.stringify(initialCatalog)};
@@ -2431,7 +2433,7 @@ try {
   }
 } catch (e) {}
 if ("serviceWorker" in navigator) { navigator.serviceWorker.register("./sw.js").catch(() => {}); }
-</script>
+<\/script>
 </body>
 </html>`;
 
