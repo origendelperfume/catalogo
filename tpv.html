@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0c0e13">
 <link rel="manifest" href="./manifest.json">
-<title>TPV · El Origen del Perfume (Cloud v5.0)</title>
+<title>TPV · El Origen del Perfume (Cloud v5.1)</title>
 <style>
   :root {
     --bg: #0c0e13;
@@ -60,6 +60,7 @@
     background: var(--card-2);
     border: 1px solid var(--border);
     color: #93c5fd;
+    cursor: pointer;
   }
   .sync-chip.ok { color: #4ade80; border-color: rgba(34, 197, 94, 0.35); background: rgba(34, 197, 94, 0.12); }
   .sync-chip.warn { color: #fbbf24; border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.12); }
@@ -144,62 +145,17 @@
   }
   .list-row:last-child { border-bottom: none; }
 
-  .sale-detail-box {
-    margin-top: 6px;
-    padding: 7px 9px;
-    background: var(--card-2);
-    border-radius: 9px;
-    font-size: 0.76rem;
-    color: #d1d5db;
-    line-height: 1.42;
-  }
-
-  .client-chip-box {
-    margin-top: 8px;
-    padding: 9px 10px;
-    background: var(--card-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 0.78rem;
-    line-height: 1.45;
-  }
-
-  .tracking-tag {
-    margin-top: 5px;
-    font-size: 0.75rem;
-    color: #93c5fd;
-    word-break: break-all;
-  }
+  .sale-detail-box { margin-top: 6px; padding: 7px 9px; background: var(--card-2); border-radius: 9px; font-size: 0.76rem; color: #d1d5db; line-height: 1.42; }
+  .client-chip-box { margin-top: 8px; padding: 9px 10px; background: var(--card-2); border: 1px solid var(--border); border-radius: 10px; font-size: 0.78rem; line-height: 1.45; }
+  .tracking-tag { margin-top: 5px; font-size: 0.75rem; color: #93c5fd; word-break: break-all; }
 
   .stock-badge { font-size: 0.74rem; font-weight: 700; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
   .st-ok { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
   .st-low { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
   .st-out { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-  .tag-pill {
-    display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 999px;
-    margin-left: 4px;
-    background: rgba(34, 197, 94, 0.16);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-  }
-  .tag-frag {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 999px;
-    margin-left: 4px;
-    background: rgba(59, 130, 246, 0.16);
-    color: #93c5fd;
-    text-decoration: none;
-  }
+  .tag-pill { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-left: 4px; background: rgba(34, 197, 94, 0.16); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
+  .tag-frag { display: inline-flex; align-items: center; gap: 3px; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-left: 4px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; text-decoration: none; }
 
   .nav {
     position: fixed;
@@ -300,13 +256,12 @@
   </div>
 </header>
 
-<!-- Modal Acceso Firebase Admin -->
 <div class="modal" id="authModal">
   <div class="modal-box">
     <div class="modal-head">
       <h2 style="margin:0;color:var(--gold);font-size:1.05rem;">🔐 Acceso Administrador · El Origen</h2>
     </div>
-    <p class="section-note">Inicia sesión con tu cuenta de administrador de Firebase para sincronizar en tiempo real tus ventas, stock, clientes y catálogo público entre todos tus dispositivos.</p>
+    <p class="section-note">Inicia sesión con tu correo y contraseña de Firebase para sincronizar ventas, stock, clientes y catálogo público en tiempo real.</p>
     <div style="margin-bottom:8px;">
       <label>Correo electrónico</label>
       <input type="email" id="authEmail" placeholder="tu-correo@ejemplo.com" autocomplete="username">
@@ -606,7 +561,7 @@
   <div class="card">
     <h2>🌐 Web de Clientes (index.html en GitHub)</h2>
     <p class="section-note">
-      Una vez conectada a Firebase, la web de clientes lee stock, novedades y precios automáticamente desde la nube. Descarga este <strong>index.html</strong> una vez (con tu misma <code>FIREBASE_CONFIG</code>) y súbelo a tu repositorio <strong>catalogo</strong>.
+      Descarga el <strong>index.html</strong> conectado a Firebase y con el enlace del PDF (<code>https://origendelperfume.github.io/catalogo/catalogo.pdf</code>) para subirlo a tu repositorio <strong>catalogo</strong>.
     </p>
     <button type="button" class="btn btn-green w-full" onclick="exportClientWeb()">📤 Descargar index.html Conectado a Firebase</button>
   </div>
@@ -812,7 +767,7 @@
       <h2 style="margin:0;color:var(--gold);font-size:1.05rem;">🏆 Ajustar Unidades Extra en Top</h2>
       <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('topAdjustModal')">✕</button>
     </div>
-    <p class="section-note">Añade o resta unidades históricas por perfume para ajustar el ranking del Top Más Vendidos (una línea por perfume: <code>Ref | unidades_extra</code>, ej: <code>222 | 5</code>).</p>
+    <p class="section-note">Añade o resta unidades históricas por perfume (una línea por perfume: <code>Ref | unidades_extra</code>, ej: <code>222 | 5</code>).</p>
     <textarea id="topAdjustText" rows="6" placeholder="222 | 5&#10;453 | 3"></textarea>
     <button type="button" class="btn btn-gold w-full" style="margin-top:12px;" onclick="saveTopAdjustments()">💾 Guardar Ajuste del Top</button>
   </div>
@@ -832,7 +787,6 @@
   </div>
 </div>
 
-<!-- Firebase SDK (compat para integración directa sin bundler) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -849,7 +803,13 @@ const FIREBASE_CONFIG = {
 };
 
 function isFirebaseConfigured() {
-  return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith("PEGA_AQUI_") && FIREBASE_CONFIG.databaseURL && !FIREBASE_CONFIG.databaseURL.startsWith("https://PEGA_AQUI_");
+  return Boolean(
+    FIREBASE_CONFIG &&
+    FIREBASE_CONFIG.apiKey &&
+    !String(FIREBASE_CONFIG.apiKey).startsWith("PEGA_AQUI_") &&
+    FIREBASE_CONFIG.databaseURL &&
+    !String(FIREBASE_CONFIG.databaseURL).startsWith("https://PEGA_AQUI_")
+  );
 }
 
 let db = null, auth = null, currentUser = null, localOnlyMode = false, remoteListenerAttached = false, applyingRemoteUpdate = false;
@@ -880,6 +840,7 @@ function safeSetItem(key, val) {
 let toastTimer = null;
 function showToast(msg) {
   const el = document.getElementById("tpvToast");
+  if (!el) return;
   el.textContent = msg;
   el.classList.add("show");
   clearTimeout(toastTimer);
@@ -888,13 +849,14 @@ function showToast(msg) {
 
 function setSyncStatus(mode, text) {
   const el = document.getElementById("syncBadge");
+  if (!el) return;
   el.className = "sync-chip " + mode;
   el.textContent = text;
 }
 
 function handleSyncBadgeClick() {
   if (!isFirebaseConfigured()) {
-    showToast("Configura FIREBASE_CONFIG en tpv.html para activar la nube.");
+    showToast("Falta rellenar FIREBASE_CONFIG dentro de tpv.html.");
     return;
   }
   if (!currentUser) {
@@ -931,12 +893,12 @@ function getFragranticaUrl(p) {
   };
   const rawBrand = String(p.marca || "").trim();
   const cleanBrand = brandMap[rawBrand.toUpperCase()] || rawBrand;
-  return `https://www.fragrantica.es/buscar/?q=${encodeURIComponent(`${p.nombre || ""} ${cleanBrand}`.trim())}`;
+  return "https://www.fragrantica.es/buscar/?q=" + encodeURIComponent(`${p.nombre || ""} ${cleanBrand}`.trim());
 }
 
 function defaultState() {
   return {
-    version: 5.0,
+    version: 5.1,
     updatedAt: 0,
     config: {
       whatsapp: "34682017002",
@@ -1057,7 +1019,7 @@ async function pushStateToFirebase(syncCatalog = true) {
     setSyncStatus("ok", "☁️ Sincronizado");
   } catch (err) {
     setSyncStatus("err", "⚠️ Error nube");
-    showToast("Error al sincronizar con Firebase: " + err.message);
+    showToast("Error al sincronizar: " + err.message);
   }
 }
 
@@ -1121,13 +1083,13 @@ function updateAuthUI() {
   const box = document.getElementById("authUserBox");
   if (!box) return;
   if (!isFirebaseConfigured()) {
-    box.innerHTML = `Modo local: rellena <code>FIREBASE_CONFIG</code> en <code>tpv.html</code> para activar la nube.`;
+    box.innerHTML = "Modo local: rellena <code>FIREBASE_CONFIG</code> en <code>tpv.html</code> para activar la nube.";
   } else if (currentUser) {
     box.innerHTML = `Conectado como <strong>${currentUser.email}</strong> · Sincronización en tiempo real activa.`;
   } else if (localOnlyMode) {
-    box.innerHTML = `Modo solo local activo. Pulsa el badge superior <strong>💾 Solo local</strong> para iniciar sesión en Firebase.`;
+    box.innerHTML = "Modo solo local activo. Pulsa el badge superior <strong>💾 Solo local</strong> para iniciar sesión en Firebase.";
   } else {
-    box.innerHTML = `Sin sesión iniciada.`;
+    box.innerHTML = "Sin sesión iniciada.";
   }
 }
 
@@ -1441,12 +1403,8 @@ function applySaleStockAndCash(items, total, metodo, sign) {
 function buildPaymentInstructionsText(customerName = "") {
   const cfg = STATE.config || {};
   const parts = [];
-  if (cfg.bizumPhone) {
-    parts.push(`📱 *Bizum:* ${cfg.bizumPhone}${cfg.payHolder ? ` (${cfg.payHolder})` : ""}`);
-  }
-  if (cfg.iban) {
-    parts.push(`🏦 *Transferencia / IBAN:* ${cfg.iban}`);
-  }
+  if (cfg.bizumPhone) parts.push(`📱 *Bizum:* ${cfg.bizumPhone}${cfg.payHolder ? ` (${cfg.payHolder})` : ""}`);
+  if (cfg.iban) parts.push(`🏦 *Transferencia / IBAN:* ${cfg.iban}`);
   if (!parts.length) return "";
   const concept = customerName ? `\n📝 *Concepto:* Pedido ${customerName}` : "";
   return `\n\n*Datos para realizar el pago:*\n${parts.join("\n")}${concept}`;
@@ -1523,9 +1481,7 @@ function finalizeSale() {
 
   const info = pendingCustomerInfo || {};
   const clientName = (info.cliente || "").trim() || "Mostrador / Directo";
-  if (clientName && !/^mostrador/i.test(clientName)) {
-    upsertClientRecord(info);
-  }
+  if (clientName && !/^mostrador/i.test(clientName)) upsertClientRecord(info);
 
   const saleRecord = {
     id: Date.now(),
@@ -2234,6 +2190,9 @@ function downloadFile(filename, content, mime) {
 
 function exportClientWeb() {
   const initialCatalog = buildPublicCatalogPayload();
+  const freeMinFmt = Number(initialCatalog.envioGratisSesena || 25).toFixed(2).replace(".", ",") + " €";
+  const freeMinNum = Number(initialCatalog.envioGratisSesena || 25);
+
   const clientHtml = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2323,14 +2282,14 @@ function exportClientWeb() {
 <div class="price-banner" id="priceBanner"></div>
 <main class="list" id="productList"></main>
 <div class="cart-bar">
-  <div class="cart-bar-info"><strong id="barTotal">0,00 € (0 uds)</strong><span id="barSub">Envío gratis en Seseña desde ${initialCatalog.envioGratisSesena.toFixed(2).replace(".", ",")} €</span></div>
+  <div class="cart-bar-info"><strong id="barTotal">0,00 € (0 uds)</strong><span id="barSub">Envío gratis en Seseña desde ${freeMinFmt}</span></div>
   <button class="btn-open-cart" onclick="openCart()">Ver Pedido 🛒</button>
 </div>
 <div class="modal" id="cartModal">
   <div class="modal-box">
     <div class="modal-head"><h2>Tu Pedido</h2><button class="close-btn" onclick="closeCart()">✕</button></div>
     <div id="cartItems"></div>
-    <div class="field"><label>Modalidad de entrega *</label><select id="deliveryMode" onchange="updateCartUI()"><option value="quinon">📍 Recogida y prueba en El Quiñón (Gratis)</option><option value="sesena">🚗 Reparto a domicilio en Seseña (Gratis ≥ ${initialCatalog.envioGratisSesena}€)</option><option value="nacional">📦 Envío Nacional por Correos / Mensajería</option></select></div>
+    <div class="field"><label>Modalidad de entrega *</label><select id="deliveryMode" onchange="updateCartUI()"><option value="quinon">📍 Recogida y prueba en El Quiñón (Gratis)</option><option value="sesena">🚗 Reparto a domicilio en Seseña (Gratis ≥ ${freeMinNum}€)</option><option value="nacional">📦 Envío Nacional por Correos / Mensajería</option></select></div>
     <div id="deliveryAlert"></div>
     <div class="field-row2">
       <div><label>Nombre y Apellidos *</label><input type="text" id="custName" placeholder="Ej: Laura García López"></div>
@@ -2365,14 +2324,32 @@ function getPrice(p, tipo, size) {
 }
 function renderBanner() {
   const c = APP_DATA.precios.Comercial, n = APP_DATA.precios.Nicho, freeMin = Number(APP_DATA.envioGratisSesena || 25);
-  document.getElementById("priceBanner").innerHTML = "<div><strong>Comercial:</strong> 30ml " + c.bote_nuevo["30"] + "€ · 50ml " + c.bote_nuevo["50"] + "€ · 100ml " + c.bote_nuevo["100"] + "€</div><div><strong>Nicho:</strong> 30ml " + n.bote_nuevo["30"] + "€ · 50ml " + n.bote_nuevo["50"] + "€ · 100ml " + n.bote_nuevo["100"] + "€</div><div class=\\"sesena-highlight\\">🚗 Seseña: envío gratis desde " + fmtEur(freeMin) + "</div>";
+  document.getElementById("priceBanner").innerHTML =
+    "<div><strong>Comercial:</strong> 30ml " + c.bote_nuevo["30"] + "€ · 50ml " + c.bote_nuevo["50"] + "€ · 100ml " + c.bote_nuevo["100"] + "€</div>" +
+    "<div><strong>Nicho:</strong> 30ml " + n.bote_nuevo["30"] + "€ · 50ml " + n.bote_nuevo["50"] + "€ · 100ml " + n.bote_nuevo["100"] + "€</div>" +
+    "<div class=\\"sesena-highlight\\">🚗 Seseña: envío gratis desde " + fmtEur(freeMin) + "</div>";
 }
 function renderProducts() {
   const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-  const filtered = (APP_DATA.perfumes || []).filter(p => !p.oculto && (currentCat === "Todos" || (currentCat === "Novedades" ? p.novedad : p.cat === currentCat)) && (!q || String(p.num).toLowerCase().includes(q) || String(p.nombre).toLowerCase().includes(q) || String(p.marca).toLowerCase().includes(q)));
+  const filtered = (APP_DATA.perfumes || []).filter(p =>
+    !p.oculto &&
+    (currentCat === "Todos" || (currentCat === "Novedades" ? p.novedad : p.cat === currentCat)) &&
+    (!q || String(p.num).toLowerCase().includes(q) || String(p.nombre).toLowerCase().includes(q) || String(p.marca).toLowerCase().includes(q))
+  );
   document.getElementById("productList").innerHTML = filtered.length ? filtered.map(p => {
     const out = Boolean(p.agotado), p50 = getPrice(p, "bote_nuevo", "50");
-    return "<div class=\\"item " + (out ? "soldout" : "") + "\\"><div><span class=\\"ref-pill\\">Ref. #" + p.num + "</span>" + (p.novedad ? "<span class=\\"tag-new\\">NOVEDAD</span>" : "") + (out ? "<span class=\\"tag-out\\">AGOTADO</span>" : "") + "<div class=\\"item-title\\">" + p.nombre + "</div><div class=\\"item-sub\\">Inspirado en " + p.marca + " · Línea " + p.cat + "</div><a class=\\"frag-link\\" href=\\"" + getFragranticaUrl(p) + "\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">🌸 Ver notas en Fragrantica ↗</a></div><div class=\\"controls\\"><select id=\\"type_" + p.num + "\\" onchange=\\"updateItemBtn('" + p.num + "')\\" " + (out ? "disabled" : "") + "><option value=\\"bote_nuevo\\">🧴 Frasco Nuevo</option><option value=\\"relleno\\">♻️ Recarga (Seseña)</option></select><select id=\\"size_" + p.num + "\\" onchange=\\"updateItemBtn('" + p.num + "')\\" " + (out ? "disabled" : "") + "><option value=\\"30\\">30 ml (" + getPrice(p, "bote_nuevo", "30") + "€)</option><option value=\\"50\\" selected>50 ml (" + p50 + "€)</option><option value=\\"100\\">100 ml (" + getPrice(p, "bote_nuevo", "100") + "€)</option></select><button class=\\"btn-add\\" id=\\"btn_" + p.num + "\\" onclick=\\"addToCart('" + p.num + "')\\" " + (out ? "disabled" : "") + ">" + (out ? "Agotado" : "+ " + p50 + "€") + "</button></div></div>";
+    return "<div class=\\"item " + (out ? "soldout" : "") + "\\">" +
+      "<div><span class=\\"ref-pill\\">Ref. #" + p.num + "</span>" +
+      (p.novedad ? "<span class=\\"tag-new\\">NOVEDAD</span>" : "") +
+      (out ? "<span class=\\"tag-out\\">AGOTADO</span>" : "") +
+      "<div class=\\"item-title\\">" + p.nombre + "</div>" +
+      "<div class=\\"item-sub\\">Inspirado en " + p.marca + " · Línea " + p.cat + "</div>" +
+      "<a class=\\"frag-link\\" href=\\"" + getFragranticaUrl(p) + "\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">🌸 Ver notas en Fragrantica ↗</a></div>" +
+      "<div class=\\"controls\\">" +
+      "<select id=\\"type_" + p.num + "\\" onchange=\\"updateItemBtn('" + p.num + "')\\" " + (out ? "disabled" : "") + "><option value=\\"bote_nuevo\\">🧴 Frasco Nuevo</option><option value=\\"relleno\\">♻️ Recarga (Seseña)</option></select>" +
+      "<select id=\\"size_" + p.num + "\\" onchange=\\"updateItemBtn('" + p.num + "')\\" " + (out ? "disabled" : "") + "><option value=\\"30\\">30 ml (" + getPrice(p, "bote_nuevo", "30") + "€)</option><option value=\\"50\\" selected>50 ml (" + p50 + "€)</option><option value=\\"100\\">100 ml (" + getPrice(p, "bote_nuevo", "100") + "€)</option></select>" +
+      "<button class=\\"btn-add\\" id=\\"btn_" + p.num + "\\" onclick=\\"addToCart('" + p.num + "')\\" " + (out ? "disabled" : "") + ">" + (out ? "Agotado" : "+ " + p50 + "€") + "</button>" +
+      "</div></div>";
   }).join("") : "<div class=\\"item\\" style=\\"text-align:center;color:var(--muted);\\">No se encontraron perfumes.</div>";
 }
 function updateItemBtn(num) {
@@ -2506,15 +2483,17 @@ function saveCashValues() {
   saveState(false); closeModal("cashModal"); showToast("💰 Saldos actualizados.");
 }
 
-renderSizeOptions();
-renderSaleClientSelect();
-updateHeaderPills();
-filterSaleSelect();
-renderSaleCart();
-initFirebase();
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js").catch(() => {});
-}
+window.addEventListener("DOMContentLoaded", () => {
+  renderSizeOptions();
+  renderSaleClientSelect();
+  updateHeaderPills();
+  filterSaleSelect();
+  renderSaleCart();
+  initFirebase();
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
+});
 </script>
 </body>
 </html>
