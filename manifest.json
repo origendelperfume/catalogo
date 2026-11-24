@@ -1,0 +1,9 @@
+{
+  "name": "El Origen del Perfume · TPV",
+  "short_name": "Origen TPV",
+  "start_url": "./tpv.html",
+  "display": "standalone",
+  "background_color": "#0c0e13",
+  "theme_color": "#0c0e13",
+  "icons": []
+}
